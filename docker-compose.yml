@@ -1,0 +1,37 @@
+version: '3'
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+    volumes:
+      - ./frontend:/myapp
+
+  backend:
+    build: ./backend
+    ports:
+      - "3002:3002"
+    environment:
+      - RAILS_ENV=development
+      - TZ=Asia/Tokyo
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/myapp
+
+  db:
+    image: postgres:16
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=weather_app_development
+
+volumes:
+  postgres_data:
